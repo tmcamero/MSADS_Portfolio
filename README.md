@@ -13,26 +13,26 @@ Table of Contents
 
 1.	README.md
 
-a.	Overview Document detailing repository contents
+    a.	Overview Document detailing repository contents
 
 2.	TeresaCameronResume.pdf
 
-a.	Current Resume
+    a.	Current Resume
 
 3.	TeresaCameronPortfolioMilestone.pdf
 
-a.	Portfolio Milestone Report
+    a.	Portfolio Milestone Report
 
 4.	Key Projects 
 
-a.	IST 736: Text Mining: Airline Tweet Analysis
+    a.	IST 736: Text Mining: Airline Tweet Analysis
 
-b.	IST 718: Big Data Analytics: World Population Analysis
+    b.	IST 718: Big Data Analytics: World Population Analysis
 
-c.	FIN 654: Financial Analytics: Analyzing Stock Portfolio Performance
+    c.	FIN 654: Financial Analytics: Analyzing Stock Portfolio Performance
 
 5.	Portfolio Presentation
 
-a.	Video file
+    a.	Video file
 
-b.	PowerPoint file
+    b.	PowerPoint file
