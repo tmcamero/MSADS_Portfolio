@@ -1,21 +1,38 @@
-Analyzing Airline Tweets
+Syracuse University, M.S., Applied Data Science
 
-Introduction
+Teresa Cameron
 
-Within the past few months, many businesses faced unprecedented complications due to the COVID-19 pandemic.  Important business decisions had to be made quickly and without the knowledge of how long the pandemic may last.  One of the industries faced with these difficult decisions was the airline industry.
+SUID: 386327244
+tmcamero@syr.edu
 
-Commercial aviation has a large impact on the U.S. economy.  More than 5% of the U.S. GDP growth and over 10 million jobs are created by this industry.  The business decisions made by this industry have a far-reaching impact, so it is important for decision makers to have access to timely and comprehensive information.  In order to survive the pandemic, the airline industry will need to use this information to radically restructure itself.  
+Description
 
-Many people have strong opinions about the airline industry.  Whether they are upset about the customer service, flight disruptions, or the gradually shrinking seating space, people willingly broadcast their sentiments on social media platforms.  This data can be useful to gauge how customers feel towards the airline industry during the pandemic.  If customers do not feel safe to use their services, many airlines may not survive, and our economy will be affected.
+The Applied Data Science program at Syracuse University’s School of Information Studies prepares students for a career in data science by focusing on the applications of data science particularly in the areas of data collection, data analysis, strategy and decisions, and implementation.  The coursework included developing several projects that used tools to collect and organize data, identify patterns in the data using visualizations and statistics, and communicate findings to identify and implement solutions to business problems.   
 
-Analysis and Models
+Table of Contents
 
-About the Data
+1.	README.md
 
-The data consisted of a CSV file with 14,640 tweets labeled as positive, neutral, or negative.  The distribution of the tweets are 16.1% are positive, 21.2% are neutral, and 62.7% are negative.
+a.	Overview Document detailing repository contents
 
-Considering there were significantly more negative tweets than neutral or positive, the models were trained on the original data and a subset of the data that had an equal amount of each label.
+2.	TeresaCameronResume.pdf
 
-The data was vectorized three different ways.  The first was a unigram frequency distribution, the second was a binary frequency distribution, and the third was a unigram tfidf.  Next the data was divided into training and testing data with 60% of the data being used for training and 40% to be used for testing.
+a.	Current Resume
 
+3.	TeresaCameronPortfolioMilestone.pdf
 
+a.	Portfolio Milestone Report
+
+4.	Key Projects 
+
+a.	IST 736: Text Mining: Airline Tweet Analysis
+
+b.	IST 718: Big Data Analytics: World Population Analysis
+
+c.	FIN 654: Financial Analytics: Analyzing Stock Portfolio Performance
+
+5.	Portfolio Presentation
+
+a.	Video file
+
+b.	PowerPoint file
