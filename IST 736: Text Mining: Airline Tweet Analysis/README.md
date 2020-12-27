@@ -21,21 +21,21 @@ Table of Contents
 
 1.	README.md
 
-a.	Overview Document detailing repository contents
+    a.	Overview Document detailing repository contents
 
 2.	Data
 
-a.	All data used in project
+    a.	All data used in project
 
 3.	Scripts
 
-a.	All scripts used for analysis
+    a.	All scripts used for analysis
 
 4.	Teresa_Cameron_IST736_Report.pdf
 
-a.	Project Report
+    a.	Project Report
 
 5.	Teresa_Cameron_IST736_PPP.pdf
 
-a.	Project Presentation
+    a.	Project Presentation
 
