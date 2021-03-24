@@ -11,7 +11,7 @@ Consumers utilize social media platforms, such as Twitter, to narrate their posi
 
 In 2019, over one and a half billion passengers traveled by airplane.  Given its vast size and scope, the airline industry would benefit from the ability to quickly analyze tweets.
 
-By using Support Vector Machine, Naïve Bayes, and Latent Dirichlet Allocation (LDA), this project analyzes tweets for sentiment and topic modeling.
+By using Support Vector Machine and Naïve Bayes, this project analyzes tweets for sentiment.
 
 Required Tools
 
