@@ -1,1 +1,169 @@
+##############################################################################
+#   Get Tweets
+##############################################################################
+
+import tweepy as tw
+import pandas as pd
+
+# Twitter api data
+consumer_key = 'yEjRX09XXXXXXXXXX4619iY5G'
+consumer_secret = '7fGe03SvXXXXXXXXXXbqRXBp7xSg3aYpyTW0cYO1tkK6yf423k'
+access_token = '1034798XXXXXXXXXX52-RxbEOAKx719zcm9BgTN8hB63gSKAV3'
+access_token_secret = 'xLXXXXXXXXXXIGqfmQwX25EhZCDOSCv7dXtSauBO7RZLw'
+
+# Connect to Twitter API 
+auth = tw.OAuthHandler(consumer_key, consumer_secret)
+auth.set_access_token(access_token, access_token_secret)
+api = tw.API(auth, wait_on_rate_limit=True)
+
+# @mentalhealth
+# Define the search term 
+search_words = '@mentalhealth'
+
+# Collect tweets
+tweets = tw.Cursor(api.search, tweet_mode = 'extended',
+              q=search_words,
+              lang="en").items(500)
+
+# Create list of Twitter
+MHTweet_data = [[tweet.user.screen_name, tweet.full_text, tweet.created_at, tweet.user.location] for tweet in tweets]
+MHTweetDF = pd.DataFrame(MHTweet_data, columns = ['UserName', 'Tweet', 'TimeDateStamp', 'Location'])
+#print(MHTweetDF.Tweet)
+
+###############################################################################
+# Clean Tweets
+###############################################################################
+
+# Drop duplicates
+MHTweetDF = MHTweetDF.drop_duplicates(subset = 'Tweet', keep = 'last')
+
+from nltk.corpus import stopwords
+en_stop_words = set(stopwords.words('english'))
+
+from sklearn.feature_extraction.text import CountVectorizer
+from gensim.corpora import Dictionary
+from gensim.models.ldamodel import LdaModel
+from gensim.models import CoherenceModel
+from nltk.corpus import stopwords
+from nltk.tokenize import RegexpTokenizer
+import nltk
+nltk.download('stopwords')
+import pandas as pd
+import re
+import math
+import matplotlib.pyplot as plt
+
+# Write function to clean tweets and create dataframe with original tweet,
+# preprocessed Tweet, and tokenized tweet
+# Source: https://towardsdatascience.com/topic-modeling-with-latent-dirichlet-allocation-by-example-3b22cd10c835
+
+def clean_tweets(df=MHTweetDF, 
+                 tweet_col='Tweet'):
+    
+    df_copy = df.copy()
+    
+    # drop rows with empty values
+    df_copy.dropna(inplace=True)
+    
+    # lower the tweets
+    df_copy['preprocessed_' + tweet_col] = df_copy[tweet_col].str.lower()
+    
+    # filter out stop words and URLs
+    en_stop_words = set(stopwords.words('english'))
+    extended_stop_words = en_stop_words | \
+                        {
+                            '&amp;', 'rt',                           
+                            'th','co', 're', 've', 'kim', 'daca', 'rt'
+                        }
+    url_re = '(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'        
+    df_copy['preprocessed_' + tweet_col] = df_copy['preprocessed_' + tweet_col].apply(lambda row: ' '.join([word for word in row.split() if (not word in extended_stop_words) and (not re.match(url_re, word))]))
+    
+    # tokenize the tweets
+    tokenizer = RegexpTokenizer('[a-zA-Z]\w+\'?\w*')
+    df_copy['tokenized_' + tweet_col] = df_copy['preprocessed_' + tweet_col].apply(lambda row: tokenizer.tokenize(row))
+    
+    return df_copy
+
+# Clean tweets
+MH_tweets_clean = clean_tweets(MHTweetDF)
+MH_tweets_clean.head()
+
+# Save as csv file
+MH_tweets_clean.to_csv(r'/Users/teresacameron/Documents/House/MADS/Text_Mining/Homework/Homework8/MHTweets.csv', index = False, header = True)
+
+###############################################################################
+#Analyze tweets
+###############################################################################
+
+# Create bar graphs of number of tweets by username and location
+MH_tweets_clean['UserName'].value_counts()[:20].plot(kind='barh', color = 'green')
+MH_tweets_clean['Location'].value_counts()[:20].plot(kind='barh')
+
+# Write function to get most frequent tweet
+def get_most_freq_words(str, n=None):
+    vect = CountVectorizer().fit(str)
+    bag_of_words = vect.transform(str)
+    sum_words = bag_of_words.sum(axis=0) 
+    freq = [(word, sum_words[0, idx]) for word, idx in vect.vocabulary_.items()]
+    freq =sorted(freq, key = lambda x: x[1], reverse=True)
+    return freq[:n]
+  
+most_freq = get_most_freq_words([ word for tweet in MH_tweets_clean.tokenized_Tweet for word in tweet],25)
+
+# Create dataframes
+most_freqDF = pd.DataFrame(most_freq, columns = ['words', 'count'])
+
+# Create horizontal bar graph of 25 most frequently used words
+fig, ax = plt.subplots(figsize=(8,8))
+most_freqDF.sort_values(by='count').plot.barh(x='words',
+                      y='count',
+                      ax=ax,
+                      color='yellow')
+ax.set_title('Top Word Frequency in Tweets')
+plt.show()
+
+# LDA
+# Build a dictionary where for each tweet, each word has its own id.
+tweets_dictionary = Dictionary(MH_tweets_clean.tokenized_Tweet)
+
+# build the corpus i.e. vectors with the number of occurence of each word per tweet
+tweets_corpus = [tweets_dictionary.doc2bow(tweet) for tweet in MH_tweets_clean.tokenized_Tweet]
+
+# compute coherence to visualize best number of topics
+tweets_coherence = []
+for nb_topics in range(1,36):
+    lda = LdaModel(tweets_corpus, num_topics = nb_topics, id2word = tweets_dictionary, passes=10)
+    cohm = CoherenceModel(model=lda, corpus=tweets_corpus, dictionary=tweets_dictionary, coherence='u_mass')
+    coh = cohm.get_coherence()
+    tweets_coherence.append(coh)
+
+# visualize coherence
+plt.figure(figsize=(10,5))
+plt.plot(range(1,36),tweets_coherence)
+plt.title('Topic Coherence: Determining Optimal Number of Topic')
+plt.xlabel("Number of Topics")
+plt.ylabel("Coherence Score");
+
+# Run LDA
+k=8
+tweets_lda = LdaModel(tweets_corpus, num_topics = k, id2word = tweets_dictionary, passes=10)
+
+import matplotlib.gridspec as gridspec
+def plot_top_words(lda=tweets_lda, nb_topics=k, nb_words=10):
+    top_words = [[word for word,_ in lda.show_topic(topic_id, topn=50)] for topic_id in range(lda.num_topics)]
+    top_betas = [[beta for _,beta in lda.show_topic(topic_id, topn=50)] for topic_id in range(lda.num_topics)]
+
+    gs  = gridspec.GridSpec(round(math.sqrt(k))+1,round(math.sqrt(k))+1)
+    gs.update(wspace=0.5, hspace=0.5)
+    plt.figure(figsize=(20,15))
+    for i in range(nb_topics):
+        ax = plt.subplot(gs[i])
+        plt.barh(range(nb_words), top_betas[i][:nb_words], align='center',color='red', ecolor='black')
+        ax.invert_yaxis()
+        ax.set_yticks(range(nb_words))
+        ax.set_yticklabels(top_words[i][:nb_words])
+        plt.title("Topic "+str(i))
+        
+  
+plot_top_words()
 
