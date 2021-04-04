@@ -6,11 +6,11 @@ SUID: 386327244 tmcamero@syr.edu
 
 Description
 
-Consumers utilize social media platforms, such as Twitter, to narrate their positive and negative experiences with products and services. A company needs to be able to collect, analyze, and respond to these comments in order to improve their customer relationships and protect their brand’s reputation.
+People utilize social media platforms, such as Twitter, to find support, get information, and connect with people who are experiencing similar difficulties. 
+As the stigma of mental health diminishes, people have been more willing to share their experiences online. 
+Doctors and mental health workers can collect data from these platforms to monitor the conversations. 
 
-In 2019, over one and a half billion passengers traveled by airplane. Given its vast size and scope, the airline industry would benefit from the ability to quickly analyze tweets.
-
-By using Support Vector Machine and Naïve Bayes, this project analyzes tweets for sentiment.
+By using Latent Dirichlet Allocation, this project analyzes tweets for topics.
 
 Required Tools
 
@@ -30,10 +30,10 @@ Scripts
 
 a. All scripts used for analysis
 
-Teresa_Cameron_IST736_Report.pdf
+Teresa_Cameron_IST736_Topic_Modeling_Report.pdf
 
 a. Project Report
 
-Teresa_Cameron_IST736_PPP.pdf
+Teresa_Cameron_IST736_Topic_Modeling_PPP.pdf
 
 a. Project Presentation
