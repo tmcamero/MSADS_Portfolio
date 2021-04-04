@@ -26,10 +26,12 @@ Table of Contents
 4.	Key Projects 
 
     a.	IST 736: Text Mining: Airline Tweet Analysis
+    
+    b.  IST 736: Text Mining: Topic Modeling of Tweets
 
-    b.	IST 718: Big Data Analytics: World Population Analysis
+    c.	IST 718: Big Data Analytics: World Population Analysis
 
-    c.	FIN 654: Financial Analytics: Analyzing Stock Portfolio Performance
+    d.	FIN 654: Financial Analytics: Analyzing Stock Portfolio Performance
 
 5.	Portfolio Presentation
 
