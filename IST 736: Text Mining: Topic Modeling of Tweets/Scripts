@@ -95,7 +95,7 @@ MH_tweets_clean = clean_tweets(MHTweetDF)
 MH_tweets_clean.head()
 
 # Save as csv file
-MH_tweets_clean.to_csv(r'/Users/teresacameron/Documents/House/MADS/Text_Mining/Homework/Homework8/MHTweets.csv', index = False, header = True)
+MH_tweets_clean.to_csv(r'/*****ENTER**PATH**HERE/MHTweets.csv', index = False, header = True)
 
 ###############################################################################
 #Analyze tweets
