@@ -31,7 +31,7 @@ Table of Contents
 
     a.	All scripts used for analysis
 
-4.	Teresa_Cameron_IST736_Report.pdf
+4.	Teresa_Cameron_IST736_Airline_Tweet_Analysis_Report.pdf
 
     a.	Project Report
 
