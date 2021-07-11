@@ -31,7 +31,7 @@ Table of Contents
 
     c.	IST 718: Big Data Analytics: World Population Analysis
 
-    d.	FIN 654: Financial Analytics: Analyzing Stock Portfolio Performance
+    d.	IST 719: Information Visualization: Evolution of Olympic Runners from 1896 to 2016
 
 5.	Portfolio Presentation
 
