@@ -15,6 +15,7 @@ The visualizations were created in R and then exported to Adobe Illustrator for 
 Required Tools
 
 o R
+
 o Adobe Illustrator
 
 Table of Contents
