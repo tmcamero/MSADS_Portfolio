@@ -1,0 +1,262 @@
+---
+title: "Poster Project"
+author: "Teresa Cameron"
+date: "8/10/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+# Load data
+runners <- read.csv("/Users/teresacameron/Documents/House/MADS/Info Viz/Poster/run_events.csv"
+                    , stringsAsFactors = F
+                    , header = T)
+```
+
+```{r}
+# Add column for BMI
+runners$BMI <- runners$Weight / ((runners$Height / 100)^2)
+```
+
+```{r}
+library(ggplot2)
+age_df <- runners[!is.na(runners$Age), ]
+# Create graphs of athlete age over time
+# avg_age <- aggregate(age_df$Age, list(year = age_df$Year), mean)
+# names(avg_age)[2] <- "age"
+# ggplot(avg_age) + aes(x = year, y = age) + geom_line() + ggtitle("Average Age of Athlete By Year")
+
+boxplot(Age~Year, data = age_df, notch = T
+        , col = c("#0286c3", "#fbb22e", "#000000", "#168c39", "#ee2f4d"))
+abline(h = mean(age_df$Age), col = "red", lwd = 3, lty = 2)
+age_df[which.min(age_df$Age),]
+age_df[which.max(age_df$Age),]
+```
+
+```{r}
+# Create graphs of athlete BMI over time
+BMI_df <- runners[!is.na(runners$BMI),]
+avg_BMI <- aggregate(BMI_df$BMI
+                     , list(year = BMI_df$Year, gender = BMI_df$Sex), mean)
+names(avg_BMI)[3] <- "BMI"
+i <- ggplot(data = avg_BMI
+       , aes(x=year, y=BMI, color=gender)) + geom_step() + theme_classic() + geom_hline(yintercept = 20.31852, color = "blue", size =1) + geom_hline(yintercept = 18.61904, color = "red", size = 1) + geom_hline(yintercept = 21.13504, color = "blue", linetype = "dashed", size = 1) + geom_hline(yintercept = 21.15823, color = "red", linetype = "dashed", size = 1) + geom_vline(xintercept = "2000")
+```
+
+```{r}
+i + theme(
+  # Hide panel borders and remove grid lines
+  panel.border = element_blank(),
+  panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(),
+  # Change axis line
+  #axis.line = element_line(colour = "black")
+  )
+```
+
+```{r}
+B <- BMI_df[order(BMI_df$BMI),]
+avg_mm <- BMI_df %>% filter(Event == "Athletics Men's Marathon")
+mean(avg_mm$BMI)
+avg_mw <- BMI_df %>% filter(Event == "Athletics Women's Marathon")
+mean(avg_mw$BMI)
+avg_Nmm <- BMI_df %>% filter(Event != "Athletics Men's Marathon")
+mean(avg_Nmm$BMI)
+avg_Nmw <- BMI_df %>% filter(Event != "Athletics Women's Marathon")
+mean(avg_Nmw$BMI)
+```
+
+
+```{r}
+# BMI by Event
+avg_BMI_Event <- aggregate(BMI_df$BMI
+                           , list(event = BMI_df$Event, gender = BMI_df$Sex), mean)
+names(avg_BMI_Event)[3] <- "BMI"
+ggplot(avg_BMI_Event, aes(x=reorder(event, BMI), y=BMI, fill=gender)) + geom_bar(stat = "identity") + coord_flip() + xlab("Event") + ggtitle("Average BMI by Event")
+```
+
+```{r}
+library(plyr)
+```
+
+```{r}
+# Load data for times
+times <- read.csv("/Users/teresacameron/Documents/House/MADS/Info Viz/Poster/race_results2.csv"
+                    , stringsAsFactors = T
+                    , header = T)
+```
+
+```{r}
+# 800M Times by Event over Years
+library(tidyverse)
+# Create data frame for 800M
+time800m <- times %>%
+  filter(Event == "800M Men")
+time800w <- times %>%
+  filter(Event == "800M Women")
+time800T <- rbind(time800m, time800w)
+# Remove results with none
+time800T <- time800T[-c(42,69,125:126),]
+fix(time800T)
+# Fix time
+#One soln: Using lubridate package
+#library(lubridate)
+#timetest800 <- hms(time800T$Result)
+#REsultsmin <- hour(timetest800)*60 + minute(timetest800) + second(timetest800)/60
+#conversion.string <- "%M:%S"
+#time800T$Result <- strptime(time800T$Result, conversion.string)
+#time800T$Result <- format(time800T$Result, format = "%H:%M:%S")
+#time800T$Result <- as.POSIXct(time800T$Result, format = "%H:%M:%S")
+# create graph of times
+g <- ggplot(time800T, aes(x=Year, y=Result)) 
+g <- g + geom_point(aes(color=Medal, shape=Gender), size = 3) + theme_classic()
+#g <- g + theme(axis.ticks = element_blank(), axis.text.y = element_blank()) +
+#     ggtitle("800 Meter Time Results By Year")
+```
+
+```{r}
+g + theme(
+  # Hide panel borders and remove grid lines
+  panel.border = element_blank(),
+  panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(),
+  # Change axis line
+  axis.line = element_line(colour = "black")
+  )
+```
+
+
+```{r}
+# Marathon Times by Event over Years
+# Create data frame for marathon
+time26.2m <- times %>%
+  filter(Event == "Marathon Men")
+time26.2w <- times %>%
+  filter(Event == "Marathon Women")
+time26.2T <- rbind(time26.2m, time26.2w)
+# Fix time
+#conversion.string <- "%M:%S"
+#time800T$Result <- strptime(time800T$Result, conversion.string)
+#time800T$Result <- format(time800T$Result, format = "%H:%M:%S")
+#time800T$Result <- as.POSIXct(time800T$Result, format = "%H:%M:%S")
+# create graph of times
+h <- ggplot(time26.2T, aes(x=Year, y=Result)) 
+h <- h + geom_point(aes(color=Medal, shape=Gender), size = 3) + theme_classic()
+#g <- g + theme(axis.ticks = element_blank(), axis.text.y = element_blank()) +
+#     ggtitle("Marathon Time Results By Year")
+```
+
+```{r}
+h + theme(
+  # Hide panel borders and remove grid lines
+  panel.border = element_blank(),
+  panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(),
+  # Change axis line
+  axis.line = element_line(colour = "black")
+  )
+```
+
+```{r}
+par(mai=c(0,0,0.2,0),xaxs="i",yaxs="i")
+library(RColorBrewer)
+library(rworldmap)
+M <- matrix(
+  c(1,2
+    ,3,4)
+  , nrow = 2, byrow = T
+)
+
+layout(M)
+layout.show(4)
+```
+
+```{r}
+# Create maps of winners from different years
+countries.win <- runners[!is.na(runners$Medal),]
+countries.win$Team[countries.win$Team == "Soviet Union"] <- "Russia"
+map1 <- countries.win %>% filter(Year == "1896" | Year == "1900" | Year == "1904" | Year == "1906" | Year ==  "1908" | Year ==  "1912" | Year ==  "1920")
+map1_table <- as.data.frame(table(map1$Team))
+colnames(map1_table) <- c("country", "value")
+map1_table[order(map1_table$value),]
+dim(map1_table)
+joinData <- joinCountryData2Map(map1_table, joinCode = "NAME", nameJoinColumn = "country")
+num.cat <- 14
+mapCountryData(joinData
+               , nameColumnToPlot = "value"
+               , numCats = num.cat
+               , catMethod = 
+                 c("pretty", "fixedWidth", "diverging", "quantiles")[1]
+               , colourPalette = colorRampPalette(
+                 c("steelblue3", "springgreen4", "firebrick1"))
+               (num.cat)
+               , borderCol = "peachpuff4"
+               , mapTitle = "Medal Winners from 1896 to 1920"
+)
+```
+
+```{r}
+map2 <- countries.win %>% filter(Year == "1924" | Year == "1936" | Year == "1928" | Year == "1932" | Year ==  "1948" | Year ==  "1952" | Year ==  "1956")
+map2_table <- as.data.frame(table(map2$Team))
+colnames(map2_table) <- c("country", "value")
+map2_table[order(map2_table$value),]
+dim(map2_table)
+joinData2 <- joinCountryData2Map(map2_table, joinCode = "NAME", nameJoinColumn = "country")
+num.cat <- 17
+mapCountryData(joinData2
+               , nameColumnToPlot = "value"
+               , numCats = num.cat
+               , catMethod = 
+                 c("pretty", "fixedWidth", "diverging", "quantiles")[1]
+               , colourPalette = colorRampPalette(
+                 c("steelblue3", "springgreen4", "firebrick1"))
+               (num.cat)
+               , borderCol = "peachpuff4"
+               , mapTitle = "Medal Winners from 1924 to 1956"
+)
+```
+
+```{r}
+map3 <- countries.win %>% filter(Year == "1960" | Year == "1964" | Year == "1968" | Year == "1972" | Year ==  "1976" | Year ==  "1980" | Year ==  "1984")
+map3_table <- as.data.frame(table(map3$Team))
+colnames(map3_table) <- c("country", "value")
+map3_table[order(map3_table$value),]
+dim(map3_table)
+joinData3 <- joinCountryData2Map(map3_table, joinCode = "NAME", nameJoinColumn = "country")
+num.cat <- 8
+mapCountryData(joinData3
+               , nameColumnToPlot = "value"
+               , numCats = num.cat
+               , catMethod = 
+                 c("pretty", "fixedWidth", "diverging", "quantiles")[1]
+               , colourPalette = colorRampPalette(
+                 c("steelblue3", "springgreen4", "firebrick1"))
+               (num.cat)
+               , borderCol = "peachpuff4"
+               , mapTitle = "Medal Winners from 1960 to 1984"
+)
+```
+
+```{r}
+map4 <- countries.win %>% filter(Year == "1988" | Year == "1992" | Year == "1996" | Year == "2000" | Year ==  "2004" | Year ==  "2008" | Year ==  "2012" | Year == "2016")
+map4_table <- as.data.frame(table(map4$Team))
+colnames(map4_table) <- c("country", "value")
+map4_table[order(map4_table$value),]
+dim(map4_table)
+joinData4 <- joinCountryData2Map(map4_table, joinCode = "NAME", nameJoinColumn = "country")
+num.cat <- 13
+mapCountryData(joinData4
+               , nameColumnToPlot = "value"
+               , numCats = num.cat
+               , catMethod = 
+                 c("pretty", "fixedWidth", "diverging", "quantiles")[1]
+               , colourPalette = colorRampPalette(
+                 c("steelblue3", "springgreen4", "firebrick1"))
+               (num.cat)
+               , borderCol = "peachpuff4"
+               , mapTitle = "Medal Winners from 1988 to 2016"
+)
+```
+
+
